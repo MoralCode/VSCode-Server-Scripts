@@ -1,4 +1,16 @@
+# gcloud compute machine-types list
+INSTANCE_TYPE="f1-micro"
+# gcloud compute images list
+INSTANCE_IMAGE="debian-10"
+INSTANCE_PROJECT="project-name"
+# gcloud compute zones list
+INSTANCE_ZONE="us-west1-b"
+INSTANCE_NAME=""
+read -r -p 'Enter a name for this instance: ' INSTANCE_NAME
 
+
+# setup compute instance
+gcloud compute instances create "$INSTANCE_NAME" --image="$INSTANCE_IMAGE" --image-project="$INSTANCE_PROJECT" --machine-type="$INSTANCE_TYPE" --zone="$INSTANCE_ZONE";
 #install code-server
 
 curl -fsSL https://code-server.dev/install.sh | sh
