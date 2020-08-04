@@ -36,27 +36,29 @@
 
 # configure individual intances
 
-echo "make sure the DNS records are set first"
 # configure caddy for your domain
-read -p "what is this instances name: " name
+# read -p "what is this instances name: " name
 
 
-caddyfile="$name.bitbybitcoding.org {
-	reverse_proxy 127.0.0.1:8080
+caddyfile="$(hostname):80, $( ping -q -c 1 $(hostname) | head -n 1 | cut -d " " -f 2
+):80, $(hostname).bitbybitcoding.org:80 {
+
+        log {
+        output file         /var/log/caddy/files-sample.log
+        }
+        root * /home/ace/my-website
+        file_server
 }
-
-files.$name.bitbybitcoding.org {
-	log {
-		output file         access.log
-	}
-	root * /home/$(whoami)/public_html
-	file_server
-}"
+"
 
 echo "$caddyfile" | sudo tee /etc/caddy/Caddyfile
+sudo mkdir -p /var/log/caddy/
+sudo chmod g+w /var/log/caddy
 
 sudo systemctl start caddy
 # sudo systemctl reload caddy
+sudo chgrp caddy /var/log/caddy
+
 
 # reboot
 
@@ -67,5 +69,6 @@ sed -i.bak "s/bind-addr: .*/bind-addr: 0.0.0.0:8080 /" ~/.config/code-server/con
 mkdir -p ~/my-website
 
 systemctl --user restart code-server
+sudo systemctl restart caddy
 
 # sudo reboot
