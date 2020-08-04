@@ -63,6 +63,7 @@ sudo systemctl start caddy
 #user setup (with user perms)
 read -p "please enter the password you wish to set for accessing the code-server: " pass
 sed -i.bak "s/password: .*/password: $pass/" ~/.config/code-server/config.yaml
+sed -i.bak "s/bind-addr: .*/bind-addr: 0.0.0.0:8080 /" ~/.config/code-server/config.yaml
 mkdir -p ~/my-website
 
 systemctl --user restart code-server
